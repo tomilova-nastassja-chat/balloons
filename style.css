@@ -1,0 +1,17 @@
+html {
+    font-family: Segoe UI;
+    font-weight: lighter;
+  }
+  
+  #canvas {
+    margin: 16px 0 0 14px;
+    border: 1px solid gray;
+  }
+  
+  header{
+    display: inline-block;
+    margin-left: 12px;
+    vertical-align: top;
+  }
+  
+  
