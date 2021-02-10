@@ -150,11 +150,11 @@ createBalloonsFlow = function () {
     clearTimeout(ballonsFlowTimeoutId);
 
     ballonsFlowTimeoutId = setInterval(() => {
-        acceleration = acceleration + 0.05;
-        createRandomBalloon(acceleration);
+        acceleration = acceleration + 0.09;
+        createRandomBalloon(acceleration/2); // приращение скорости + 0.05px за шаг
 
         createBalloonsFlow();
-    }, 2500 - acceleration * 600); // уменьшение времени таймаута, чтобы шариков становилось больше
+    }, 3500 / acceleration ); // уменьшение времени таймаута, чтобы шарики выпускались чаще
 }
 
 createBalloonsFlow();
