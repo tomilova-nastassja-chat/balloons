@@ -19,10 +19,12 @@ let screenTimerId = setInterval(() => {
 }, 1000);
 
 
+
 // ИГРА
 let canvas = document.querySelector("#canvas");
 let ctx = canvas.getContext("2d");
 let gameZoneSize = 300;
+
 
 
 // Иголка и управление
@@ -76,19 +78,22 @@ document.addEventListener('keydown', (e) => {
 })
 
 
+
 // Ветер
 class Wind {
     constructor(x, y) {
         this.X = x;
         this.Y = y;
         this.IsRight = (x == 0) ? true : false;
+        this.IsBlow = false;
     }
 
     clearWindBlow() {
-        ctx.clearRect(this.X - 20, this.Y - 30, 40, 60);
+        ctx.clearRect(this.X - 30, this.Y - 30, 60, 60);
     }
 
     runWindBlow() {
+        this.IsBlow = true;
         this.windBlowTimeout = setInterval(() => {
             this.clearWindBlow();
             if (this.IsRight) {
@@ -98,7 +103,7 @@ class Wind {
             };
         }, 10);
 
-        // анимация ветра
+        // анимация выдвижения ветра
         let windAnimationTimeout = setInterval(() => {
             if (this.IsRight) {
                 this.X = this.X + 10;
@@ -107,9 +112,13 @@ class Wind {
             }
         }, 1000);
 
+        // ветер пропадает через 3 секунды
         setTimeout(() => {
             clearTimeout(windAnimationTimeout);
-        }, 2000);
+            clearTimeout(this.windBlowTimeout);
+            this.clearWindBlow();
+            this.IsBlow = false;
+        }, 3000);
     }
 
     drawWindBlowLeft() {
@@ -139,8 +148,18 @@ class Wind {
     }
 }
 
-let wind = new Wind(0, 150);
-//wind.runWindBlow();
+let getRandomNumber = function (from, to) {
+    return Math.floor(Math.random() * (to - from)) + from;
+}
+
+// Запуск ветра в слуайный момент слева или справа
+setTimeout(() => {
+    let rightOrLeft = getRandomNumber(0, 1);
+    let X = rightOrLeft == 0 ? 0 : 300;    
+    let wind = new Wind(X, 150);
+    wind.runWindBlow();
+}, getRandomNumber(1, 60) * 1000);
+
 
 
 // Описание шарика и зачет очков
@@ -203,9 +222,6 @@ let createRandomBalloon = function (acceleration) {
     balloon.runBalloon();
 }
 
-let getRandomNumber = function (from, to) {
-    return Math.floor(Math.random() * (to - from)) + from;
-}
 
 
 // Создание потока шариков
