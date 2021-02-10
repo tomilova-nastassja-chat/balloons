@@ -154,7 +154,7 @@ createBalloonsFlow = function () {
         createRandomBalloon(acceleration);
 
         createBalloonsFlow();
-    }, 3500 - acceleration * 1000); // уменьшение времени таймаута, чтобы шариков становилось больше
+    }, 2500 - acceleration * 600); // уменьшение времени таймаута, чтобы шариков становилось больше
 }
 
 createBalloonsFlow();
