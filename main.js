@@ -76,6 +76,73 @@ document.addEventListener('keydown', (e) => {
 })
 
 
+// Ветер
+class Wind {
+    constructor(x, y) {
+        this.X = x;
+        this.Y = y;
+        this.IsRight = (x == 0) ? true : false;
+    }
+
+    clearWindBlow() {
+        ctx.clearRect(this.X - 20, this.Y - 30, 40, 60);
+    }
+
+    runWindBlow() {
+        this.windBlowTimeout = setInterval(() => {
+            this.clearWindBlow();
+            if (this.IsRight) {
+                this.drawWindBlowRight()
+            } else {
+                this.drawWindBlowLeft()
+            };
+        }, 10);
+
+        // анимация ветра
+        let windAnimationTimeout = setInterval(() => {
+            if (this.IsRight) {
+                this.X = this.X + 10;
+            } else {
+                this.X = this.X - 10;
+            }
+        }, 1000);
+
+        setTimeout(() => {
+            clearTimeout(windAnimationTimeout);
+        }, 2000);
+    }
+
+    drawWindBlowLeft() {
+        ctx.strokeStyle = "Blue";
+        ctx.beginPath();
+        ctx.arc(this.X + 20, this.Y, 30, Math.PI * 5 / 6, Math.PI * 7 / 6, false);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.X + 30, this.Y, 30, Math.PI * 4 / 6, Math.PI * 8 / 6, false);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.X + 43, this.Y, 30, Math.PI * 3 / 6, Math.PI * 9 / 6, false);
+        ctx.stroke();
+    }
+
+    drawWindBlowRight() {
+        ctx.strokeStyle = "Blue";
+        ctx.beginPath();
+        ctx.arc(this.X - 20, this.Y, 30, Math.PI * 11 / 6, Math.PI * 13 / 6, false);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.X - 30, this.Y, 30, Math.PI * 10 / 6, Math.PI * 14 / 6, false);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(this.X - 43, this.Y, 30, Math.PI * 9 / 6, Math.PI * 15 / 6, false);
+        ctx.stroke();
+    }
+}
+
+let wind = new Wind(0, 150);
+//wind.runWindBlow();
+
+
 // Описание шарика и зачет очков
 class Balloon {
     constructor(x, y, radius, color, speed) {
@@ -151,12 +218,10 @@ createBalloonsFlow = function () {
 
     ballonsFlowTimeoutId = setInterval(() => {
         acceleration = acceleration + 0.09;
-        createRandomBalloon(acceleration/2); // приращение скорости + 0.05px за шаг
+        createRandomBalloon(acceleration / 2); // приращение скорости + 0.05px за шаг
 
         createBalloonsFlow();
-    }, 3500 / acceleration ); // уменьшение времени таймаута, чтобы шарики выпускались чаще
+    }, 3500 / acceleration); // уменьшение времени таймаута, чтобы шарики выпускались чаще
 }
 
 createBalloonsFlow();
-
-
