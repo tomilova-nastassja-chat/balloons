@@ -25,7 +25,7 @@ let ctx = canvas.getContext("2d");
 let gameZoneSize = 300;
 
 
-// Иголка, контроль, зачет очков
+// Иголка и управление
 class Needle {
     constructor(x) {
         this.X = x;
@@ -76,7 +76,7 @@ document.addEventListener('keydown', (e) => {
 })
 
 
-// Описание шарика
+// Описание шарика и зачет очков
 class Balloon {
     constructor(x, y, radius, color, speed) {
         this.X = x;
