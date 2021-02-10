@@ -25,6 +25,10 @@ let canvas = document.querySelector("#canvas");
 let ctx = canvas.getContext("2d");
 let gameZoneSize = 300;
 
+let getRandomNumber = function (from, to) {
+    return Math.floor(Math.random() * (to - from)) + from;
+}
+
 
 
 // Иголка и управление
@@ -148,15 +152,12 @@ class Wind {
     }
 }
 
-let getRandomNumber = function (from, to) {
-    return Math.floor(Math.random() * (to - from)) + from;
-}
-
 // Запуск ветра в слуайный момент слева или справа
+let rightOrLeft = getRandomNumber(0, 2);
+let X = (rightOrLeft == 0) ? 0 : 300;
+let Y = getRandomNumber(0, gameZoneSize - 60);
+let wind = new Wind(X, Y);
 setTimeout(() => {
-    let rightOrLeft = getRandomNumber(0, 1);
-    let X = rightOrLeft == 0 ? 0 : 300;    
-    let wind = new Wind(X, 150);
     wind.runWindBlow();
 }, getRandomNumber(1, 60) * 1000);
 
@@ -175,6 +176,7 @@ class Balloon {
     drawBalloon() {
         if (!this.isBalloonPopped()) // проверка не попал ли шарик на кончик иголки
         {
+            this.checkWindBlow();
             ctx.beginPath();
             ctx.arc(this.X, this.Y, this.Radius, 0, Math.PI * 2, false);
             ctx.fillStyle = this.Color;
@@ -205,6 +207,16 @@ class Balloon {
             }
         }
         return false;
+    }
+
+    checkWindBlow() {
+        if (wind.IsBlow) {
+            if (wind.IsRight) {
+                this.X = this.X + 1;
+            } else {
+                this.X = this.X - 1;
+            }
+        }
     }
 }
 
