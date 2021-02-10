@@ -176,7 +176,6 @@ class Balloon {
     drawBalloon() {
         if (!this.isBalloonPopped()) // проверка не попал ли шарик на кончик иголки
         {
-            this.checkWindBlow();
             ctx.beginPath();
             ctx.arc(this.X, this.Y, this.Radius, 0, Math.PI * 2, false);
             ctx.fillStyle = this.Color;
@@ -185,13 +184,14 @@ class Balloon {
     }
 
     clearBalloon() {
-        ctx.clearRect(this.X - this.Radius, this.Y - this.Radius + this.Speed, this.Radius * 2, this.Radius * 2);
+        ctx.clearRect(this.X - this.Radius - 1, this.Y - this.Radius + this.Speed, this.Radius * 2 + 2, this.Radius * 2 + 2);
     }
 
     runBalloon() {
         this.balloonTimeout = setInterval(() => {
             this.clearBalloon();
             this.Y = this.Y - this.Speed;
+            this.checkWindBlow();
             this.drawBalloon();
         }, 50);
     }
@@ -211,10 +211,15 @@ class Balloon {
 
     checkWindBlow() {
         if (wind.IsBlow) {
+            let distance = Math.abs(wind.X - this.X) + Math.abs(wind.Y - this.Y);
+            let blowPower = gameZoneSize / distance;
+
             if (wind.IsRight) {
-                this.X = this.X + 1;
+                this.X = (this.X + blowPower) + this.Radius < gameZoneSize ?
+                (this.X + blowPower) : this.X;
             } else {
-                this.X = this.X - 1;
+                this.X = (this.X - blowPower) - this.Radius < gameZoneSize ?
+                (this.X - blowPower) : this.X;
             }
         }
     }
