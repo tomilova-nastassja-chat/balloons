@@ -6,6 +6,9 @@ let gameTimeInSeconds = 60;
 setTimeout(() => {
     clearTimeout(screenTimerId); // остановка отсчета времени на экране
     clearTimeout(ballonsFlowTimeoutId); // остановка создания шариков
+    clearTimeout(needle.needleInterval); // остановка отрисовки иглы
+    needle.clearNeedle();
+    
     document.querySelector("#gameTime").parentNode.innerHTML = "Время вышло";
     document.querySelector("#gameScore").innerHTML = `Лопнуто шариков ${gameScore}<br> Пропущено шариков ${balloonsCount - gameScore}`;
 }, gameTimeInSeconds * 1000);
@@ -67,6 +70,56 @@ let createRandomBalloon = function (acceleration) {
 let getRandomNumber = function (from, to) {
     return Math.floor(Math.random() * (to - from)) + from;
 }
+
+// Иголка, контроль, зачет очков
+class Needle {
+    constructor(x) {
+        this.X = x;
+        this.Step = 10;
+    }
+
+    // отсчет координат от конца иглы
+    drawNeedle() {
+        this.needleInterval = setInterval(() => {
+            this.clearNeedle();
+            ctx.beginPath();
+            ctx.moveTo(this.X - 2, 0);
+            ctx.lineTo(this.X - 2, 5);
+            ctx.lineTo(this.X, 12);
+            ctx.lineTo(this.X + 2, 5);
+            ctx.lineTo(this.X + 2, 0);
+            ctx.fillStyle = "Black";
+            ctx.fill();
+        }, 10);
+    }
+
+    clearNeedle() {
+        ctx.clearRect(this.X - 2, 0, 4, 12);
+    }
+
+    moveLeft() {
+        this.clearNeedle();
+        let newX = this.X - this.Step;
+        this.X = newX > 3 ? newX : 3; // иголка не покинет видимую область игрового поля
+    }
+
+    moveRight() {
+        this.clearNeedle();
+        let newX = this.X + this.Step;
+        this.X = newX < (gameZoneSize - 2) ? newX : (gameZoneSize - 2); // иголка не покинет видимую область игрового поля
+    }
+}
+
+let needle = new Needle(gameZoneSize / 2);
+needle.drawNeedle();
+
+document.addEventListener('keydown', (e) => {
+    if (e.keyCode === 37) {
+        needle.moveLeft();
+    } else if (e.keyCode === 39) {
+        needle.moveRight();
+    }
+})
 
 // Создание потока шариков
 let ballonsFlowTimeoutId = 0;
