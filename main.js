@@ -212,14 +212,14 @@ class Balloon {
     checkWindBlow() {
         if (wind.IsBlow) {
             let distance = Math.abs(wind.X - this.X) + Math.abs(wind.Y - this.Y);
-            let blowPower = gameZoneSize / distance;
+            let blowPower = 2 * gameZoneSize / distance;
 
             if (wind.IsRight) {
-                this.X = (this.X + blowPower) + this.Radius < gameZoneSize ?
-                (this.X + blowPower) : this.X;
+                this.X = (this.X + blowPower) <= gameZoneSize - this.Radius?
+                (this.X + blowPower) : gameZoneSize - this.Radius;
             } else {
-                this.X = (this.X - blowPower) - this.Radius < gameZoneSize ?
-                (this.X - blowPower) : this.X;
+                this.X = (this.X - blowPower) >= this.Radius ?
+                (this.X - blowPower) : 0 + this.Radius;
             }
         }
     }
